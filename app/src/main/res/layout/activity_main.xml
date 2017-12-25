@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--todo кнопки почему-то разъезжаются-->
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -19,14 +17,13 @@
             android:layout_weight="1"
             android:onClick="onNewBoolBtnClick"
             android:text="@string/newBoolBtn" />
-
         <Button
-            android:id="@+id/lastBoolBtn"
-            android:layout_width="match_parent"
+            android:id="@+id/newDoubleBtn"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:layout_weight="1"
-            android:onClick="onLastBoolBtnClick"
-            android:text="@string/lastBoolBtn" />
+            android:text="@string/newDoubleBtn"
+            android:onClick="onNewDoubleBtnClick" />
     </LinearLayout>
 
     <LinearLayout
@@ -35,12 +32,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/newDoubleBtn"
-            android:layout_height="wrap_content"
+            android:id="@+id/lastBoolBtn"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/newDoubleBtn"
-            android:onClick="onNewDoubleBtnClick" />
+            android:onClick="onLastBoolBtnClick"
+            android:text="@string/lastBoolBtn" />
         <Button
             android:id="@+id/lastDoubleBtn"
             android:layout_height="wrap_content"
