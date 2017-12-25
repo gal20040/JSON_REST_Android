@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">JSON_Android</string>
+
+    <string name="newBoolBtn">Add random boolean in jsonObject</string>
+    <string name="lastBoolBtn">Get the last boolean</string>
+
+    <string name="newDoubleBtn">Add random double in jsonObject</string>
+    <string name="lastDoubleBtn">Get the last double</string>
+
+    <string name="result">Результат: </string>
+</resources>
