@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onShowJSONObjectBtnClick(View view) {
-        resultTextView.setText(jsonObject.toString());
+        resultTextView.setText(String.format("%s\nItem number in JSONObject = %s", jsonObject.toString(), jsonObject.length()));
     }
 
     public void onGetItemBtnClick(View view) {
