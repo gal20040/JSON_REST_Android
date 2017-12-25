@@ -8,4 +8,7 @@
     <string name="lastDoubleBtn">Get the last double</string>
 
     <string name="result">Результат: </string>
+    <string name="clear_jsonobject_btn">Clear JSONObject</string>
+    <string name="show_jsonobject_btn">Show the whole JSONObject</string>
+
 </resources>

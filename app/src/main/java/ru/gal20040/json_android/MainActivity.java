@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -26,20 +25,6 @@ public class MainActivity extends AppCompatActivity {
         resultTextView = findViewById(R.id.resultStringTextView);
     }
 
-//    private Double getDoubleJson() {
-//        double result = 0;
-//        try{
-//            jsonObject = new JSONObject("{dollar:54.48}");
-//            result = jsonObject.getDouble("dollar");
-//            Log.i(LOG_TAG, "json double");
-//            Log.i(LOG_TAG, "Курс доллара: " + result);
-//        } catch (JSONException ex){
-//            Log.d(LOG_TAG, getStackTrace(ex));
-//        }
-//
-//        return result;
-//    }
-
     private static String getStackTrace(Exception ex) {
         StringBuilder sb = new StringBuilder(500);
         StackTraceElement[] st = ex.getStackTrace();
@@ -51,32 +36,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onNewBoolBtnClick(View view) {
-        boolean newBoolean = random.nextBoolean();
-        try{
-            jsonObject.put("boolean", newBoolean);
-            Log.i(LOG_TAG, "json new boolean = " + newBoolean);
-        } catch (JSONException ex){
-            Log.d(LOG_TAG, getStackTrace(ex));
-        }
+        Boolean newBoolean = random.nextBoolean();
+        addNewJSONObject(newBoolean, newBoolean.getClass().toString());
+    }
 
-        resultTextView.setText(String.format("%s", newBoolean));
+    public void onNewDoubleBtnClick(View view) {
+        Double newDouble = random.nextDouble();
+        addNewJSONObject(newDouble, newDouble.getClass().toString());
     }
 
     public void onLastBoolBtnClick(View view) {
     }
 
-    public void onNewDoubleBtnClick(View view) {
-        Double newDouble = random.nextDouble();
-        try{
-            jsonObject.put("double", newDouble);
-            Log.i(LOG_TAG, "json new double = " + newDouble);
-        } catch (JSONException ex){
-            Log.d(LOG_TAG, getStackTrace(ex));
-        }
-
-        resultTextView.setText(String.format("%s", newDouble));
+    public void onLastDoubleBtnClick(View view) {
     }
 
-    public void onLastDoubleBtnClick(View view) {
+    private void addNewJSONObject(Object newData, String dataType) {
+        dataType = dataType.replace("class java.lang.", "");
+        byte randomSeed = 100;
+        int randomInt = random.nextInt(randomSeed);
+        try{
+            while (jsonObject.has(dataType + randomInt))
+                randomInt += random.nextInt(randomSeed);
+            dataType += randomInt;
+            jsonObject.put(dataType, newData);
+            Log.i(LOG_TAG, String.format("json new %s = %s", dataType, newData));
+            resultTextView.setText(String.format("%s", newData));
+        } catch (Exception ex){
+            Log.d(LOG_TAG, getStackTrace(ex));
+        }
+    }
+
+    public void onClearJSONBtnClick(View view) {
+        jsonObject = new JSONObject();
+    }
+
+    public void onShowJSONObjectBtnClick(View view) {
+        resultTextView.setText(jsonObject.toString());
     }
 }
