@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void addNewJSONObject(Object newData, String dataType) {
         dataType = dataType.replace("class java.lang.", "");
+
+        //ищем уникальный ключ
         byte randomSeed = 100;
         int randomInt = random.nextInt(randomSeed);
         try{
