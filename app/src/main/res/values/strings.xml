@@ -10,7 +10,10 @@
     <string name="result">Результат: </string>
     <string name="clear_jsonobject_btn">Clear JSONObject</string>
     <string name="show_jsonobject_btn">Show the whole JSONObject</string>
+
     <string name="getItemBtn">Get the JSON item</string>
-    <string name="jsonobject_key">JSONObject key</string>
+    <string name="removeItemBtn">Remove the JSON item</string>
+
+    <string name="jsonobject_name">JSONObject name</string>
 
 </resources>

@@ -27,31 +27,36 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/jsonobject_key_title"
+        android:id="@+id/jsonobject_name_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/jsonobject_key" />
+        android:text="@string/jsonobject_name" />
+
+    <EditText
+        android:id="@+id/jsonobject_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text" />
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <!--todo сделать поле и кнопку шириной по 50%-->
-        <EditText
-            android:id="@+id/jsonobject_key"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="text" />
-        <!--android:text="@string/jsonobject_key"-->
         <Button
             android:id="@+id/getItemBtn"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_weight="1"
             android:text="@string/getItemBtn"
             android:onClick="onGetItemBtnClick" />
+        <Button
+            android:id="@+id/removeItemBtn"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:text="@string/removeItemBtn"
+            android:onClick="onRemoveItemBtnClick" />
     </LinearLayout>
 
     <Button

@@ -74,14 +74,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGetItemBtnClick(View view) {
-        EditText editText = findViewById(R.id.jsonobject_key);
-        String key = editText.getText().toString();
+        EditText editText = findViewById(R.id.jsonobject_name);
+        String name = editText.getText().toString();
         try {
             String result;
-            if (jsonObject.has(key))
-                result = String.format("\"%s\":%s", key, jsonObject.get(key));
+            if (jsonObject.has(name))
+                result = String.format("\"%s\":%s", name, jsonObject.get(name));
             else
-                result = String.format("No item with key '%s'", key);
+                result = String.format("No item with name '%s'", name);
+            resultTextView.setText(result);
+        } catch (JSONException ex){
+            Log.d(LOG_TAG, getStackTrace(ex));
+        }
+    }
+
+    public void onRemoveItemBtnClick(View view) {
+        EditText editText = findViewById(R.id.jsonobject_name);
+        String name = editText.getText().toString();
+        try {
+            String result;
+            if (jsonObject.has(name)) {
+                result = String.format("\"%s\":%s has been removed", name, jsonObject.get(name));
+                jsonObject.remove(name);
+            }
+            else
+                result = String.format("No item with name '%s'", name);
             resultTextView.setText(result);
         } catch (JSONException ex){
             Log.d(LOG_TAG, getStackTrace(ex));
