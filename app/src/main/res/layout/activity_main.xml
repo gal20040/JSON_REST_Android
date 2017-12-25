@@ -26,49 +26,46 @@
             android:onClick="onNewDoubleBtnClick" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/jsonobject_key_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/jsonobject_key" />
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
-            android:id="@+id/lastBoolBtn"
-            android:layout_width="match_parent"
+        <!--todo сделать поле и кнопку шириной по 50%-->
+        <EditText
+            android:id="@+id/jsonobject_key"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onLastBoolBtnClick"
-            android:text="@string/lastBoolBtn" />
+            android:ems="10"
+            android:inputType="text" />
+        <!--android:text="@string/jsonobject_key"-->
         <Button
-            android:id="@+id/lastDoubleBtn"
+            android:id="@+id/getItemBtn"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:text="@string/lastDoubleBtn"
-            android:onClick="onLastDoubleBtnClick" />
-
+            android:text="@string/getItemBtn"
+            android:onClick="onGetItemBtnClick" />
     </LinearLayout>
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/clear_jsonobject_btn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/clear_jsonobject_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/clear_jsonobject_btn"
-            android:onClick="onClearJSONBtnClick" />
-        <!--android:layout_marginTop="30dp"-->
-        <Button
-            android:id="@+id/show_jsonobject_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/show_jsonobject_btn"
-            android:onClick="onShowJSONObjectBtnClick" />
-    </LinearLayout>
+        android:text="@string/clear_jsonobject_btn"
+        android:onClick="onClearJSONBtnClick" />
+    <Button
+        android:id="@+id/show_jsonobject_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_jsonobject_btn"
+        android:onClick="onShowJSONObjectBtnClick" />
 
     <TextView
         android:id="@+id/resultWordTextView"

@@ -4,8 +4,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -45,12 +47,6 @@ public class MainActivity extends AppCompatActivity {
         addNewJSONObject(newDouble, newDouble.getClass().toString());
     }
 
-    public void onLastBoolBtnClick(View view) {
-    }
-
-    public void onLastDoubleBtnClick(View view) {
-    }
-
     private void addNewJSONObject(Object newData, String dataType) {
         dataType = dataType.replace("class java.lang.", "");
 
@@ -64,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             jsonObject.put(dataType, newData);
             Log.i(LOG_TAG, String.format("json new %s = %s", dataType, newData));
             resultTextView.setText(String.format("%s", newData));
-        } catch (Exception ex){
+        } catch (JSONException ex){
             Log.d(LOG_TAG, getStackTrace(ex));
         }
     }
@@ -75,5 +71,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void onShowJSONObjectBtnClick(View view) {
         resultTextView.setText(jsonObject.toString());
+    }
+
+    public void onGetItemBtnClick(View view) {
+        EditText editText = findViewById(R.id.jsonobject_key);
+        String key = editText.getText().toString();
+        try {
+            String result;
+            if (jsonObject.has(key))
+                result = String.format("\"%s\":%s", key, jsonObject.get(key));
+            else
+                result = String.format("No item with key '%s'", key);
+            resultTextView.setText(result);
+        } catch (JSONException ex){
+            Log.d(LOG_TAG, getStackTrace(ex));
+        }
     }
 }
