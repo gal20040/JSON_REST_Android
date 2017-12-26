@@ -19,6 +19,8 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     final String NON_UNIQUE_NAME = "New item name is not unique. Choose another one.";
+    final String REG_EXP = "[^A-Za-z0-9.]";
+
     final String LOG_TAG = "myLogs";
     private JSONObject jsonObject = new JSONObject();
     private Random random = new Random();
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private void filterNonAlphaNumericalEditText(EditText editText) {
         if (getCurrentFocus() == editText) {
             String oldString = editText.getText().toString();
-            String newString = oldString.replaceAll("[^A-Za-z0-9]", "");
+            String newString = oldString.replaceAll(REG_EXP, "");
 
             int cursorPosition = editText.getSelectionStart();
             //если мы убираем какой-то лишний знак из строки, то надо вернуть курсор на 1 знак левее
@@ -192,31 +194,26 @@ public class MainActivity extends AppCompatActivity {
 
     public void onAddItemBtnClick(View view) {
         EditText new_value = findViewById(R.id.new_value);
-        EditText new_name = findViewById(R.id.new_name);
+        TextView new_name = findViewById(R.id.new_name);
+        String name = new_name.getText().toString();
+        String value = new_value.getText().toString();
 
-        switch (new_value.getText().toString()) {
+        switch (value) {
             case ("true"):
-                addNewJSONObject(Boolean.valueOf("true"), new_name.getText().toString());
+                addNewJSONObject(Boolean.valueOf("true"), name);
                 break;
             case ("false"):
-                addNewJSONObject(Boolean.valueOf("false"), new_name.getText().toString());
+                addNewJSONObject(Boolean.valueOf("false"), name);
                 break;
             default:
-//                if (isExprDouble(editText.toString())) {
-//                    Double.parseDouble(editText.toString());
-//                } else {
-                //resultStringTextView.setText(String.format("Value in the field %s must be boolean (true, false) or double (0.123) type."), R.string.new_item_value);
-                resultStringTextView.setText("Value in the field \"New item value\" must be boolean (true, false) or double (0.123) type.");
-//                }
+                DoubleSafeParser doubleSafeParser = new DoubleSafeParser();
+                Object parsedValue = doubleSafeParser.getDouble(value);
+                if (parsedValue instanceof Double)
+                    addNewJSONObject(parsedValue, name);
+                else
+                    //resultStringTextView.setText(String.format("Value in the field %s must be boolean (true, false) or double (0.123) type."), R.string.new_item_value);
+                    resultStringTextView.setText("Value in the field \"New item value\" must be boolean (true, false) or double (0.123) type.");
                 break;
         }
-
     }
-
-//    public boolean isExprDouble(String stringNumber) {
-////        Double.parseDouble(stringNumber);
-//
-//        //todo realize
-//        return random.nextBoolean();
-//    }
 }
