@@ -2,10 +2,14 @@ package ru.gal20040.json_android;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,18 +17,73 @@ import org.json.JSONObject;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
+    final String NON_UNIQUE_NAME = "New item name is not unique. Choose another one.";
     final String LOG_TAG = "myLogs";
     private JSONObject jsonObject = new JSONObject();
     private Random random = new Random();
 
-    TextView resultTextView;
+    TextView resultStringTextView;
+    EditText newValueET, newNameET;
+    Button addItemBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        resultTextView = findViewById(R.id.resultStringTextView);
+        resultStringTextView = findViewById(R.id.resultStringTextView);
+        addItemBtn = findViewById(R.id.addItemBtn);
+        addItemBtn.setEnabled(false);
+
+        newValueET = findViewById(R.id.new_value);
+        newValueET.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterNonAlphaNumericalEditText(newValueET);
+
+                boolean enabled = true;
+                if (isStringNullOrEmpty(newValueET.getText().toString()))
+                    enabled = false;
+                addItemBtn.setEnabled(enabled);
+            }
+        });
+
+        newNameET = findViewById(R.id.new_name);
+        newNameET.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterNonAlphaNumericalEditText(newNameET);
+
+                //проверяем уникальность введённого имени и в зависимости от этого блокируем кнопку addItemBtn
+                //сейчас эта проверка не нужна - в любом случае к введённому имени добавляем случайное число
+                /*boolean enabled = true;
+                if (!isNameUnique(newNameET.getText().toString()))
+                    enabled = false;
+                addItemBtn.setEnabled(enabled);*/
+            }
+        });
+    }
+
+    private void filterNonAlphaNumericalEditText(EditText editText) {
+        if (getCurrentFocus() == editText) {
+            String oldString = editText.getText().toString();
+            String newString = oldString.replaceAll("[^A-Za-z0-9]", "");
+
+            int cursorPosition = editText.getSelectionStart();
+            //если мы убираем какой-то лишний знак из строки, то надо вернуть курсор на 1 знак левее
+            if (!oldString.equals(newString))
+                cursorPosition -= 1;
+
+            editText.clearFocus();
+            editText.setText(newString);
+            editText.requestFocus();
+            editText.setSelection(cursorPosition);
+        }
     }
 
     private static String getStackTrace(Exception ex) {
@@ -37,32 +96,58 @@ public class MainActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    public void onNewBoolBtnClick(View view) {
-        Boolean newBoolean = random.nextBoolean();
-        addNewJSONObject(newBoolean, newBoolean.getClass().toString());
+    public void onNewRandBoolBtnClick(View view) {
+        addNewJSONObject(random.nextBoolean(), null);
     }
 
-    public void onNewDoubleBtnClick(View view) {
-        Double newDouble = random.nextDouble();
-        addNewJSONObject(newDouble, newDouble.getClass().toString());
+    public void onNewRandDoubleBtnClick(View view) {
+        addNewJSONObject(random.nextDouble(), null);
     }
 
-    private void addNewJSONObject(Object newData, String dataType) {
-        dataType = dataType.replace("class java.lang.", "");
+    private void addNewJSONObject(Object newData, String newName) {
+        newName = getRandomUniqueName(newData, newName);
 
-        //ищем уникальный ключ
-        byte randomSeed = 100;
-        int randomInt = random.nextInt(randomSeed);
         try{
-            while (jsonObject.has(dataType + randomInt))
-                randomInt += random.nextInt(randomSeed);
-            dataType += randomInt;
-            jsonObject.put(dataType, newData);
-            Log.i(LOG_TAG, String.format("json new %s = %s", dataType, newData));
-            resultTextView.setText(String.format("%s", newData));
+            jsonObject.put(newName, newData);
+            Log.i(LOG_TAG, String.format("json new %s = %s", newName, newData));
+            resultStringTextView.setText(String.format("%s", newData));
         } catch (JSONException ex){
             Log.d(LOG_TAG, getStackTrace(ex));
         }
+    }
+
+    /** Проверка строки на null и "" (пустая строка).
+     * true вернётся, если строка равна null или "".
+     * false - во всех других случаях.
+     *
+     * От ненужных пробелов (и всего прочего-ненужного) избавились в методах onTextChanged().
+     */
+    public boolean isStringNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
+
+    /** Проверяет уникальность newName в рамках jsonObject.
+     * Предварительно запускает проверку на null и "" через метод isStringNullOrEmpty().
+     *
+     * true вернётся, если (newName не null и не "") И (newName нет в составе jsonObject).
+     * false - во всех других случаях.
+     */
+    public boolean isNameUnique(String newName) {
+        return !isStringNullOrEmpty(newName)
+                && !jsonObject.has(newName);
+    }
+
+    private String getRandomUniqueName(Object newData, String newName) {
+        if (isStringNullOrEmpty(newName))
+            newName = newData.getClass().toString().replace("class java.lang.", "");
+
+        byte randomSeed = 100;
+        int randomInt = random.nextInt(randomSeed);
+        while (!isNameUnique(newName + randomInt))   //проверяем уникальность newName
+            randomInt += random.nextInt(randomSeed); //подбираем уникальное имя
+        newName += randomInt;
+
+        return newName;
     }
 
     public void onClearJSONBtnClick(View view) {
@@ -70,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onShowJSONObjectBtnClick(View view) {
-        resultTextView.setText(String.format("%s\nItem number in JSONObject = %s", jsonObject.toString(), jsonObject.length()));
+        resultStringTextView.setText(String.format("%s\nItem number in JSONObject = %s", jsonObject.toString(), jsonObject.length()));
     }
 
     public void onGetItemBtnClick(View view) {
@@ -82,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 result = String.format("\"%s\":%s", name, jsonObject.get(name));
             else
                 result = String.format("No item with name '%s'", name);
-            resultTextView.setText(result);
+            resultStringTextView.setText(result);
         } catch (JSONException ex){
             Log.d(LOG_TAG, getStackTrace(ex));
         }
@@ -99,9 +184,39 @@ public class MainActivity extends AppCompatActivity {
             }
             else
                 result = String.format("No item with name '%s'", name);
-            resultTextView.setText(result);
+            resultStringTextView.setText(result);
         } catch (JSONException ex){
             Log.d(LOG_TAG, getStackTrace(ex));
         }
     }
+
+    public void onAddItemBtnClick(View view) {
+        EditText new_value = findViewById(R.id.new_value);
+        EditText new_name = findViewById(R.id.new_name);
+
+        switch (new_value.getText().toString()) {
+            case ("true"):
+                addNewJSONObject(Boolean.valueOf("true"), new_name.getText().toString());
+                break;
+            case ("false"):
+                addNewJSONObject(Boolean.valueOf("false"), new_name.getText().toString());
+                break;
+            default:
+//                if (isExprDouble(editText.toString())) {
+//                    Double.parseDouble(editText.toString());
+//                } else {
+                //resultStringTextView.setText(String.format("Value in the field %s must be boolean (true, false) or double (0.123) type."), R.string.new_item_value);
+                resultStringTextView.setText("Value in the field \"New item value\" must be boolean (true, false) or double (0.123) type.");
+//                }
+                break;
+        }
+
+    }
+
+//    public boolean isExprDouble(String stringNumber) {
+////        Double.parseDouble(stringNumber);
+//
+//        //todo realize
+//        return random.nextBoolean();
+//    }
 }

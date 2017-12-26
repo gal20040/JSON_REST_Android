@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--add random item-->
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="onNewBoolBtnClick"
+            android:onClick="onNewRandBoolBtnClick"
             android:text="@string/newBoolBtn" />
         <Button
             android:id="@+id/newDoubleBtn"
@@ -23,15 +24,73 @@
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:text="@string/newDoubleBtn"
-            android:onClick="onNewDoubleBtnClick" />
+            android:onClick="onNewRandDoubleBtnClick" />
     </LinearLayout>
 
+    <!--new item-->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+        <!--new_name-->
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/new_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_item_name" />
+
+            <EditText
+                android:id="@+id/new_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text" />
+            <!--здесь нам нужны только буквы латинского алфавита (строчные и прописные) и цифры-->
+            <!--todo подобрать более подходящий inputType, чем text-->
+        </LinearLayout>
+        <!--new_value-->
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/new_value_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_item_value" />
+            <EditText
+                android:id="@+id/new_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text" />
+            <!--здесь нам нужны только буквы латинского алфавита (строчные и прописные) и цифры-->
+            <!--todo подобрать более подходящий inputType, чем text-->
+        </LinearLayout>
+    </LinearLayout>
+    <Button
+        android:id="@+id/addItemBtn"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/addItemBtn"
+        android:onClick="onAddItemBtnClick" />
+
+    <!--get and remove item-->
     <TextView
         android:id="@+id/jsonobject_name_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/jsonobject_name" />
-
     <EditText
         android:id="@+id/jsonobject_name"
         android:layout_width="match_parent"
@@ -59,6 +118,7 @@
             android:onClick="onRemoveItemBtnClick" />
     </LinearLayout>
 
+    <!--clear and show jsonobject-->
     <Button
         android:id="@+id/clear_jsonobject_btn"
         android:layout_width="wrap_content"
@@ -72,6 +132,7 @@
         android:text="@string/show_jsonobject_btn"
         android:onClick="onShowJSONObjectBtnClick" />
 
+    <!--result-->
     <TextView
         android:id="@+id/resultWordTextView"
         android:layout_width="wrap_content"

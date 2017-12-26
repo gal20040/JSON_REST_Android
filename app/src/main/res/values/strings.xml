@@ -15,5 +15,11 @@
     <string name="removeItemBtn">Remove the JSON item</string>
 
     <string name="jsonobject_name">JSONObject name</string>
+    <string name="addItemBtn">Add new item in JSONObject</string>
+
+    <!--New item name [^A-Za-z0-9]-->
+    <string name="new_item_name">New item name [^A&#8211;Za&#8211;z0&#8211;9]</string>
+
+    <string name="new_item_value">New item value* (bool, double)</string>
 
 </resources>
