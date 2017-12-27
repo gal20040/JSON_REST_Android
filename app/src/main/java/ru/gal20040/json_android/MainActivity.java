@@ -28,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
     TextView resultStringTextView;
     EditText newValueET, newNameET;
     Button addItemBtn;
+    Button show_jsonobject_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        show_jsonobject_btn = findViewById(R.id.show_jsonobject_btn);
 
         resultStringTextView = findViewById(R.id.resultStringTextView);
         addItemBtn = findViewById(R.id.addItemBtn);
@@ -154,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClearJSONBtnClick(View view) {
         jsonObject = new JSONObject();
+        onShowJSONObjectBtnClick(show_jsonobject_btn);
     }
 
     public void onShowJSONObjectBtnClick(View view) {
