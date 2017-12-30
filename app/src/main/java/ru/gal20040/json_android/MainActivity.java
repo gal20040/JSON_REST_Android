@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -246,8 +245,8 @@ public class MainActivity extends AppCompatActivity {
             numbers.put("array_name", arrayName);
             numbers.put("array_item_count", doubleNumber.length);
 
-            for (int i = 0; i < doubleNumber.length; i++){
-                doubleArray.put(doubleNumber[i]);
+            for (Double aDoubleNumber : doubleNumber) {
+                doubleArray.put(aDoubleNumber);
             }
 
             numbers.put("array_items", doubleArray);
