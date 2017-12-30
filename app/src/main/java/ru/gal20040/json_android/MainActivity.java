@@ -171,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
             String result;
             if (jsonObject.has(name))
                 result = String.format("\"%s\":%s", name, jsonObject.get(name));
+                //можно использовать методы getBoolean, getDouble, getInt, getLong, getString
+                //также есть методы getJSONArray, getJSONObject
             else
                 result = String.format("No item with name '%s'", name);
             resultStringTextView.setText(result);
