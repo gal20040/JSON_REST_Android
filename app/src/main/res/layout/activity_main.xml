@@ -140,6 +140,21 @@
             android:onClick="onShowJSONObjectBtnClick" />
     </LinearLayout>
 
+    <!--add random JSONArray-->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/add_random_jsonarray_btn"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/add_random_jsonarray_btn"
+            android:onClick="onAddRndJSONArrayBtnClick" />
+    </LinearLayout>
+
     <!--result-->
     <TextView
         android:id="@+id/resultWordTextView"

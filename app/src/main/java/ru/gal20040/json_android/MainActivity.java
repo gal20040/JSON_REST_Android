@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,10 +19,10 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    final String NON_UNIQUE_NAME = "New item name is not unique. Choose another one.";
     final String REG_EXP = "[^A-Za-z0-9.]";
 
     final String LOG_TAG = "myLogs";
+    final String ERROR_MESSAGE = String.format("Error! Look in logs with tag=%s", LOG_TAG);
     private JSONObject jsonObject = new JSONObject();
     private Random random = new Random();
 
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(LOG_TAG, String.format("json new %s = %s", newName, newData));
             resultStringTextView.setText(String.format("%s", newData));
         } catch (JSONException ex){
-            Log.d(LOG_TAG, getStackTrace(ex));
+            errorAction(ex);
         }
     }
 
@@ -177,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 result = String.format("No item with name '%s'", name);
             resultStringTextView.setText(result);
         } catch (JSONException ex){
-            Log.d(LOG_TAG, getStackTrace(ex));
+            errorAction(ex);
         }
     }
 
@@ -194,8 +195,13 @@ public class MainActivity extends AppCompatActivity {
                 result = String.format("No item with name '%s'", name);
             resultStringTextView.setText(result);
         } catch (JSONException ex){
-            Log.d(LOG_TAG, getStackTrace(ex));
+            errorAction(ex);
         }
+    }
+
+    private void errorAction(JSONException ex) {
+        Log.d(LOG_TAG, getStackTrace(ex));
+        resultStringTextView.setText(ERROR_MESSAGE);
     }
 
     public void onAddItemBtnClick(View view) {
@@ -220,6 +226,37 @@ public class MainActivity extends AppCompatActivity {
                     //resultStringTextView.setText(String.format("Value in the field %s must be boolean (true, false) or double (0.123) type."), R.string.new_item_value);
                     resultStringTextView.setText("Value in the field \"New item value\" must be boolean (true, false) or double (0.123) type.");
                 break;
+        }
+    }
+
+    public void onAddRndJSONArrayBtnClick(View view) {
+        String arrayName = "It's an array of double type numbers.";
+        int arraySize = 3;
+        Double[] doubleNumber = new Double[arraySize];
+
+        for (int i = 0; i < arraySize; i++) {
+            Double d = random.nextDouble();
+            doubleNumber[i] = d;
+        }
+
+        JSONObject numbers = new JSONObject();
+        JSONArray doubleArray = new JSONArray();
+
+        try{
+            numbers.put("array_name", arrayName);
+            numbers.put("array_item_count", doubleNumber.length);
+
+            for (int i = 0; i < doubleNumber.length; i++){
+                doubleArray.put(doubleNumber[i]);
+            }
+
+            numbers.put("array_items", doubleArray);
+
+            jsonObject.put("some_array" + random.nextInt(10), numbers);
+
+            onShowJSONObjectBtnClick(show_jsonobject_btn);
+        } catch (JSONException ex){
+            errorAction(ex);
         }
     }
 }
