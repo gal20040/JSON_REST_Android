@@ -1,1 +1,1 @@
-include ':json_app'
+include ':json_app', ':requesttoyandexapi'
