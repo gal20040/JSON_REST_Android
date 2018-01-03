@@ -33,17 +33,14 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("FieldCanBeLocal")
     private final String LOG_TAG = "myLogs";
     private final short RESPONSE_FOR_SUCCESSFUL_HTTP_REQUESTS = 200;
-    @SuppressWarnings("FieldCanBeLocal")
     private final byte pauseForServerResponse = 50;
     private String responseAsString;
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private final String restURL = "https://translate.yandex.net/api/v1.5/tr.json/getLangs";
-    @SuppressWarnings("FieldCanBeLocal")
-    private final String apiKeyYandexTranslate = "trnsl.1.1.20180102T000656Z.94e24b28bb2be45d.75eada6d438957deaa2eea52d51c83121739c2ba";
-    @SuppressWarnings("FieldCanBeLocal")
     private final String apiKeyAdditionTemplate = "?key="; //[key=<API-ключ>]
-    @SuppressWarnings("FieldCanBeLocal")
+    private final String apiKeyYandexTranslate = "trnsl.1.1.20180102T000656Z.94e24b28bb2be45d.75eada6d438957deaa2eea52d51c83121739c2ba";
+    private final String restURL = "https://translate.yandex.net/api/v1.5/tr.json/getLangs"
+            .concat(apiKeyAdditionTemplate)
+            .concat(apiKeyYandexTranslate);
     private final String langAdditionTemplate = "&ui="; //[ui=<код языка>]
 
     TextView resultStringTextView;
@@ -100,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onGetListSupportedLanguagesBtnClick(View view) {
         String reqUrl = restURL
-                + apiKeyAdditionTemplate + apiKeyYandexTranslate
                 + langAdditionTemplate + "ru";
 
         sendRequest(reqUrl);
