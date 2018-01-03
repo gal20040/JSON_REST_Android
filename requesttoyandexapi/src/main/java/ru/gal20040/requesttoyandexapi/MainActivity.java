@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView resultStringTextView;
     Spinner spinnerLangFrom, spinnerLangTo;
+    Button translateBtn;
 
     String[] languages = {"ru", "en", "pl"};
 
@@ -58,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         resultStringTextView = findViewById(R.id.resultStringTextView);
+
+        translateBtn = findViewById(R.id.translateBtn);
+        translateBtn.setEnabled(false);
 
         // spinner адаптер
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, languages);
@@ -72,17 +77,30 @@ public class MainActivity extends AppCompatActivity {
 //        spinner.setPrompt("Выбор языка"); // заголовок
         spinnerLangFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {}
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                checkSelectedLanguages();
+            }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {}
         });
         //todo вытащить в отдельный общий метод для spinnerLangFrom и spinnerLangTo
         spinnerLangTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {}
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                checkSelectedLanguages();
+            }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {}
         });
+    }
+
+    private void checkSelectedLanguages() {
+        boolean enabled = true;
+        String langFromString = spinnerLangFrom.getSelectedItem().toString();
+        String langToString   = spinnerLangTo.getSelectedItem().toString();
+        if (langFromString.equals(langToString))
+            enabled = false;
+        translateBtn.setEnabled(enabled);
     }
 
     private void errorAction(Exception ex) {
