@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("FieldCanBeLocal")
     private final String LOG_TAG = "myLogs";
     private final short RESPONSE_FOR_SUCCESSFUL_HTTP_REQUESTS = 200;
+    @SuppressWarnings("FieldCanBeLocal")
     private final byte pauseForServerResponse = 50;
     private String responseAsString;
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private final String restURL = "https://translate.yandex.net/api/v1.5/tr.json/getLangs"
             .concat(apiKeyAdditionTemplate)
             .concat(apiKeyYandexTranslate);
+    @SuppressWarnings("FieldCanBeLocal")
     private final String langAdditionTemplate = "&ui="; //[ui=<код языка>]
 
     TextView resultStringTextView;
@@ -97,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onGetListSupportedLanguagesBtnClick(View view) {
         String reqUrl = restURL
-                + langAdditionTemplate + "ru";
+                .concat(langAdditionTemplate)
+                .concat("ru");
 
         sendRequest(reqUrl);
 
@@ -184,12 +187,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onShowJSONObjectBtnClick() {
+        final byte indent = 3;
         try {
             JSONObject jsonObject = new JSONObject(responseAsString);
-            resultStringTextView.setText(jsonObject.toString(3));
+            resultStringTextView.setText(jsonObject.toString(indent));
         } catch (JSONException e) {
             errorAction(e);
         }
-        responseAsString += "";
     }
 }
