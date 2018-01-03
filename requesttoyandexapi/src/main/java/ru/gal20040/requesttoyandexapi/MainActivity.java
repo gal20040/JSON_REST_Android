@@ -1,12 +1,13 @@
 package ru.gal20040.requesttoyandexapi;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -39,16 +40,17 @@ public class MainActivity extends AppCompatActivity {
 
     private final String apiKeyAdditionTemplate = "?key="; //[key=<API-ключ>]
     private final String apiKeyYandexTranslate = "trnsl.1.1.20180102T000656Z.94e24b28bb2be45d.75eada6d438957deaa2eea52d51c83121739c2ba";
-    private final String restURL = "https://translate.yandex.net/api/v1.5/tr.json/getLangs"
+    private final String restURLGetLangs = "https://translate.yandex.net/api/v1.5/tr.json/getLangs"
             .concat(apiKeyAdditionTemplate)
             .concat(apiKeyYandexTranslate);
-    @SuppressWarnings("FieldCanBeLocal")
-    private final String langAdditionTemplate = "&ui="; //[ui=<код языка>]
+    private final String restURLTranslate = "https://translate.yandex.net/api/v1.5/tr.json/translate"
+            .concat(apiKeyAdditionTemplate)
+            .concat(apiKeyYandexTranslate);
 
     TextView resultStringTextView;
     Spinner spinnerLangFrom, spinnerLangTo;
 
-    String[] languages = {"русский", "английский", "польский"};
+    String[] languages = {"ru", "en", "pl"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,29 +99,24 @@ public class MainActivity extends AppCompatActivity {
         return sb.toString();
     }
 
+    /*
+    * https://tech.yandex.ru/translate/doc/dg/reference/getLangs-docpage/
+    * Синтаксис запроса
+    * https://translate.yandex.net/api/v1.5/tr.json/getLangs
+    * ? [key=<API-ключ>]
+    * & [ui=<код языка>]
+    * & [callback=<имя callback-функции>]
+    * */
     public void onGetListSupportedLanguagesBtnClick(View view) {
-        String reqUrl = restURL
+        final String langAdditionTemplate = "&ui="; //[ui=<код языка>]
+
+        String reqUrl = restURLGetLangs
                 .concat(langAdditionTemplate)
                 .concat("ru");
 
         sendRequest(reqUrl);
 
-        while(true) {
-            /*метод sendRequest выполняется в асинхронном режиме,
-            поэтому метод onShowJSONObjectBtnClick, следующий следом, выполняется раньше,
-            чем заполняется responseAsString, поэтому пришлось вставить такой костыль.
-            todo найти вариант вывода ответа сервера без этого костыля - Thread.sleep(50);*/
-            try {
-                if (responseAsString != null) {
-                    onShowJSONObjectBtnClick();
-                    responseAsString = null;
-                    break;
-                }
-                Thread.sleep(pauseForServerResponse);
-            } catch (InterruptedException e) {
-                errorAction(e);
-            }
-        }
+        showResponseToUser();
     }
 
     private void sendRequest(final String reqUrl) {
@@ -151,8 +148,10 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         throw new ConnectException(
                                 String.format(
-                                        "myConnection.getResponseCode()=%s",
-                                        myConnection.getResponseCode()
+                                        "myConnection.getResponseCode()=%s\n" +
+                                                "reqUrl=%s",
+                                        myConnection.getResponseCode(),
+                                        reqUrl
                                 )
                         );
                     }
@@ -193,6 +192,75 @@ public class MainActivity extends AppCompatActivity {
             resultStringTextView.setText(jsonObject.toString(indent));
         } catch (JSONException e) {
             errorAction(e);
+        }
+    }
+
+    /*
+    * https://tech.yandex.ru/translate/doc/dg/reference/translate-docpage/
+    * Синтаксис запроса
+    * https://translate.yandex.net/api/v1.5/tr.json/translate
+    * ? [key=<API-ключ>]
+    * & [text=<переводимый текст>]
+    * & [lang=<направление перевода>]
+    * & [format=<формат текста>]
+    * & [options=<опции перевода>]
+    * & [callback=<имя callback-функции>]
+    * */
+    public void onTranslateBtnClick(View view) {
+        final String textTemplate   = "&text=";
+        final String langTemplate   = "&lang=";
+        final String formatTemplate = "&format=plain";
+
+        EditText inputEditText = findViewById(R.id.userInput);
+        String textForTranslation = inputEditText.getText().toString();
+        textForTranslation = textTemplate.concat(textForTranslation);
+
+        String langsForTranslation = String.format(
+                "%s%s-%s",
+                langTemplate,
+                spinnerLangFrom.getSelectedItem().toString(), //langFrom
+                spinnerLangTo.getSelectedItem().toString()    //langTo
+        );
+
+        String reqUrl = restURLTranslate
+                .concat(textForTranslation)
+                .concat(langsForTranslation)
+                .concat(formatTemplate);
+
+        //пробелы в тексте портят весь запрос
+        reqUrl = reqUrl.replaceAll(" ", "%20");
+
+        sendRequest(reqUrl);
+
+        /*ответ:
+        {
+            "lang":"en-ru",
+            "text":[
+                "лиса"
+            ],
+            "code":200
+        }
+        */
+
+        showResponseToUser();
+    }
+
+    private void showResponseToUser() {
+        while(true) {
+            /*метод sendRequest выполняется в асинхронном режиме,
+            поэтому метод onShowJSONObjectBtnClick, следующий следом, выполняется раньше,
+            чем заполняется responseAsString, поэтому пришлось вставить такой костыль.
+            todo найти вариант вывода ответа сервера без этого костыля - Thread.sleep(50);*/
+            try {
+                if (responseAsString != null) {
+                    onShowJSONObjectBtnClick();
+                    responseAsString = null;
+                    break;
+                }
+                Thread.sleep(pauseForServerResponse);
+            } catch (InterruptedException e) {
+                errorAction(e);
+            }
         }
     }
 }
