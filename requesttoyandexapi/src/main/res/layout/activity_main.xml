@@ -13,24 +13,44 @@
         android:orientation="vertical">
         <Button
             android:id="@+id/getServiceDataBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/getServiceDataBtn"
-            android:onClick="onGetListSupportedLanguagesBtnClick"/>
-        <!--<EditText-->
-        <!--android:id="@+id/userInput"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:inputType="text"/>-->
-        <!--<TextView-->
-        <!--android:id="@+id/serverResponse"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text=""/>-->
-        <!--<TextView-->
-        <!--android:id="@+id/showParsedJSON"-->
-        <!--android:layout_width="fill_parent"-->
+            android:onClick="onGetListSupportedLanguagesBtnClick" />
         <!--android:layout_height="wrap_content" />-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <Spinner
+                android:id="@+id/langFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:spinnerMode="dialog" />
+            <Spinner
+                android:id="@+id/langTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:spinnerMode="dialog" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/userInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/translateBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/translateBtn"
+            android:onClick="onTranslateBtnClick"
+            android:layout_gravity="end" />
+
         <TextView
             android:id="@+id/resultStringTextView"
             android:layout_width="match_parent"

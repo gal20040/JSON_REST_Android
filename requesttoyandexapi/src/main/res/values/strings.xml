@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">RequestToYandexApi</string>
     <string name="getServiceDataBtn">Получить список поддерживаемых языков</string>
+    <string name="translateBtn">Перевести</string>
 </resources>
