@@ -1,1 +1,1 @@
-# Эксперименты с JSON в Android
+# Эксперименты с JSON и REST в Android
