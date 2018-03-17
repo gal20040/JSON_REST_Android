@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,8 +19,10 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -29,6 +32,39 @@ import javax.net.ssl.HttpsURLConnection;
 //https://developer.android.com/reference/android/util/JsonReader.html
 
 //https://tech.yandex.ru/translate/doc/dg/reference/getLangs-docpage/
+
+
+
+
+
+
+
+
+
+
+
+//https://www.youtube.com/watch?v=EThkglxLxSM
+//https://www.youtube.com/watch?v=ryY7Dy3z-7Q
+//https://habrahabr.ru/post/314028/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
     private final String restURLGetLangs = "https://translate.yandex.net/api/v1.5/tr.json/getLangs"
             .concat(apiKeyAdditionTemplate)
             .concat(apiKeyYandexTranslate);
-    private final String restURLTranslate = "https://translate.yandex.net/api/v1.5/tr.json/translate"
-            .concat(apiKeyAdditionTemplate)
-            .concat(apiKeyYandexTranslate);
+//    private final String restURLTranslate = "https://translate.yandex.net/api/v1.5/tr.json/translate"
+//            .concat(apiKeyAdditionTemplate)
+//            .concat(apiKeyYandexTranslate);
 
     TextView resultStringTextView;
     Spinner spinnerLangFrom, spinnerLangTo;
@@ -154,6 +190,63 @@ public class MainActivity extends AppCompatActivity {
                 HttpsURLConnection myConnection;
                 try {
                     myConnection = (HttpsURLConnection) serverEndpoint.openConnection();
+//                    myConnection.setRequestMethod("POST");
+                } catch (IOException e) {
+                    errorAction(e);
+                    return;
+                }
+
+                try {
+                    if (myConnection.getResponseCode() == RESPONSE_FOR_SUCCESSFUL_HTTP_REQUESTS) {
+                        InputStream responseBody = myConnection.getInputStream();
+                        responseAsString = convertInputStreamToString(responseBody);
+                    } else {
+                        throw new ConnectException(
+                                String.format(
+                                        "myConnection.getResponseCode()=%s\n" +
+                                                "reqUrl=%s",
+                                        myConnection.getResponseCode(),
+                                        reqUrl
+                                )
+                        );
+                    }
+                } catch (Exception e) {
+                    errorAction(e);
+                } finally {
+                    myConnection.disconnect();
+                }
+            }
+        });
+    }
+
+    private void sendRequest2(final String reqUrl, final String reqParams) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                responseAsString = null;
+
+                URL serverEndpoint;
+                try {
+                    serverEndpoint = new URL(reqUrl);
+                } catch (MalformedURLException e) {
+                    errorAction(e);
+                    return;
+                }
+
+                HttpsURLConnection myConnection;
+                try {
+                    myConnection = (HttpsURLConnection) serverEndpoint.openConnection();
+                    myConnection.setRequestMethod("POST");
+                    myConnection.setDoOutput(true);
+                    myConnection.setDoInput(true);
+
+                    myConnection.setRequestProperty("Content-Length", "" + Integer.toString(reqParams.getBytes().length));
+                    OutputStream os = myConnection.getOutputStream();
+                    byte[] data = reqParams.getBytes("UTF-8");
+                    os.write(data);
+                    data = null;
+
+                    myConnection.connect();
                 } catch (IOException e) {
                     errorAction(e);
                     return;
@@ -228,10 +321,14 @@ public class MainActivity extends AppCompatActivity {
         final String textTemplate   = "&text=";
         final String langTemplate   = "&lang=";
         final String formatTemplate = "&format=plain";
+        //Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20  Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20
 
         EditText inputEditText = findViewById(R.id.userInput);
         String textForTranslation = inputEditText.getText().toString();
-        textForTranslation = textTemplate.concat(textForTranslation);
+        textForTranslation = "Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20  Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.01 Brown fox is hunting.02 Brown fox is hunting.03 Brown fox is hunting.04 Brown fox is hunting.05 Brown fox is hunting.06 Brown fox is hunting.07 Brown fox is hunting.08 Brown fox is hunting.09 Brown fox is hunting.10 Brown fox is hunting.11 Brown fox is hunting.12 Brown fox is hunting.13 Brown fox is hunting.14 Brown fox is hunting.15 Brown fox is hunting.16 Brown fox is hunting.17 Brown fox is hunting.18 Brown fox is hunting.19 Brown fox is hunting.20 Brown fox is hunting.30";
+        textForTranslation = textTemplate.concat(textForTranslation).concat(textForTranslation)
+//                .concat(textForTranslation)
+        ;
 
         String langsForTranslation = String.format(
                 "%s%s-%s",
@@ -240,15 +337,35 @@ public class MainActivity extends AppCompatActivity {
                 spinnerLangTo.getSelectedItem().toString()    //langTo
         );
 
-        String reqUrl = restURLTranslate
-                .concat(textForTranslation)
+        String apiKeyAdditionTemplate = "key="; //[key=<API-ключ>]
+        String apiKey = apiKeyAdditionTemplate
+                .concat(apiKeyYandexTranslate);
+
+        String restURLTranslateNew = "https://translate.yandex.net/api/v1.5/tr.json/translate";
+
+        String reqParams = apiKey
                 .concat(langsForTranslation)
-                .concat(formatTemplate);
+                .concat(formatTemplate)
+                .concat(textForTranslation);
 
         //пробелы в тексте портят весь запрос
-        reqUrl = reqUrl.replaceAll(" ", "%20");
+//        reqUrl = reqUrl.replaceAll(" ", "%20");
+        reqParams = reqParams.replaceAll(" ", "%20");
 
-        sendRequest(reqUrl);
+//        sendRequest(reqUrl);
+        Log.i(LOG_TAG,
+                String.format(
+                        "reqParams=%s",
+                        reqParams
+                )
+        );
+        Log.i(LOG_TAG,
+                String.format(
+                        "restURLTranslateNew=%s",
+                        restURLTranslateNew
+                )
+        );
+        sendRequest2(restURLTranslateNew, reqParams);
 
         /*ответ:
         {
@@ -278,6 +395,111 @@ public class MainActivity extends AppCompatActivity {
                 Thread.sleep(pauseForServerResponse);
             } catch (InterruptedException e) {
                 errorAction(e);
+            }
+        }
+    }
+
+    class SendLoginData extends AsyncTask<Void, Void, Void> {
+
+        String resultString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                String apiKeyAdditionTemplate = "key="; //[key=<API-ключ>]
+                String apiKeyYandexTranslate = "trnsl.1.1.20180102T000656Z.94e24b28bb2be45d.75eada6d438957deaa2eea52d51c83121739c2ba";
+//                String restURLGetLangs = "https://translate.yandex.net/api/v1.5/tr.json/getLangs"
+//                        .concat(apiKeyAdditionTemplate)
+//                        .concat(apiKeyYandexTranslate);
+//                 final String restURLTranslate = "https://translate.yandex.net/api/v1.5/tr.json/translate"
+//                        .concat(apiKeyAdditionTemplate)
+//                        .concat(apiKeyYandexTranslate);
+                String langAdditionTemplate = "&ui="; //[ui=<код языка>]
+
+                String myURL = "https://translate.yandex.net/api/v1.5/tr.json/getLangs";
+                String parammetrs = apiKeyAdditionTemplate
+                        .concat(apiKeyYandexTranslate)
+                        .concat(langAdditionTemplate)
+                        .concat("ru");
+                Log.i(LOG_TAG,
+                        String.format(
+                                "reqUrl=" +
+                                        "%s\n" +
+                                        "%s\n" +
+                                        "%s",
+                                myURL,
+                                apiKeyAdditionTemplate.concat(apiKeyYandexTranslate),
+                                langAdditionTemplate.concat("ru")
+                        )
+                );
+                byte[] data;
+                InputStream is;
+
+                try {
+                    URL url = new URL(myURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
+
+                    conn.setRequestProperty("Content-Length", "" + Integer.toString(parammetrs.getBytes().length));
+                    OutputStream os = conn.getOutputStream();
+                    data = parammetrs.getBytes("UTF-8");
+                    os.write(data);
+                    data = null;
+
+                    conn.connect();
+                    int responseCode= conn.getResponseCode();
+
+                    if (responseCode == RESPONSE_FOR_SUCCESSFUL_HTTP_REQUESTS) {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                        is = conn.getInputStream();
+
+                        byte[] buffer = new byte[8192]; // Такого вот размера буфер
+                        // Далее, например, вот так читаем ответ
+                        int bytesRead;
+                        while ((bytesRead = is.read(buffer)) != -1) {
+                            baos.write(buffer, 0, bytesRead);
+                        }
+                        data = baos.toByteArray();
+                        resultString = new String(data, "UTF-8");
+                        Log.i(LOG_TAG, "resultString=" + resultString);
+                    } else {
+                        throw new ConnectException(
+                                String.format(
+                                        "myConnection.getResponseCode()=%s",
+                                        responseCode
+                                )
+                        );
+                    }
+//                } catch (MalformedURLException e) {
+//
+//                    //resultString = "MalformedURLException:" + e.getMessage();
+//                } catch (IOException e) {
+//
+//                    //resultString = "IOException:" + e.getMessage();
+                } catch (Exception e) {
+                    errorAction(e);
+                    //resultString = "Exception:" + e.getMessage();
+                }
+            } catch (Exception e) {
+                errorAction(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            if(resultString != null) {
+                Toast toast = Toast.makeText(getApplicationContext(), resultString, Toast.LENGTH_LONG);
+                toast.show();
             }
         }
     }
